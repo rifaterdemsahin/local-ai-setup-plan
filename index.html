@@ -35,6 +35,7 @@
             background-color: #0f172a;
             color: #f8fafc;
         }
+        .mermaid { display: block; text-align: center; overflow-x: auto; }
         .glass-card {
             background: rgba(30, 41, 59, 0.7);
             backdrop-filter: blur(10px);
@@ -58,11 +59,12 @@
     </style>
 </head>
 <body class="min-h-screen p-4 md:p-8 font-sans antialiased">
+    <script src="nav.js"></script>
 
     <!-- Header -->
     <header class="mb-8">
         <h1 class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-local to-brand-success">
-            AI Infrastructure Strategy
+            🖥️ AI Infrastructure Strategy
         </h1>
         <p class="text-slate-400 mt-2 text-sm md:text-base">
             Executive Summary: 7-GPU WRX80 Local Rig vs. DeepInfra / Cloud Subs (Q4 2026 - Q3 2027)
@@ -71,26 +73,26 @@
 
     <!-- ============ OBJECTIVE & KEY RESULTS ============ -->
     <section class="glass-card p-6 mb-8 border-l-4 border-l-brand-success">
-        <p class="text-xs uppercase tracking-wider text-brand-success font-semibold mb-1">Objective</p>
+        <p class="text-xs uppercase tracking-wider text-brand-success font-semibold mb-1">🎯 Objective</p>
         <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">Move AI workloads from cloud to a self-hosted 7-GPU rig, but only when the numbers pay for it.</h2>
         <p class="text-slate-400 text-sm mb-6">The big decision is renting the <span class="text-white">£450/mo storage unit</span> (free electricity). Until that pays off, stay on cloud (~£73/mo) and build at home on the 1x RX 6900 XT for free.</p>
 
-        <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-3">Key Results</p>
+        <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-3">📌 Key Results</p>
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700">
-                <p class="text-brand-local font-bold text-sm mb-1">KR1 · Volume</p>
+                <p class="text-brand-local font-bold text-sm mb-1">📈 KR1 · Volume</p>
                 <p class="text-sm text-slate-300">Reach <span class="text-white font-semibold">≥1.3B tokens/mo</span> on DeepSeek V3 or <span class="text-white font-semibold">≥620M</span> on R1, and hold it for <span class="text-white">3 months in a row</span> (Year-2+ targets; Year 1 needs 1.95B / 930M).</p>
             </div>
             <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700">
-                <p class="text-brand-success font-bold text-sm mb-1">KR2 · Revenue</p>
+                <p class="text-brand-success font-bold text-sm mb-1">💷 KR2 · Revenue</p>
                 <p class="text-sm text-slate-300">Sign <span class="text-white font-semibold">2 local businesses at £225/mo</span> for private email bots. That's £450/mo, which pays the full rent (the "zero-token shortcut").</p>
             </div>
             <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700">
-                <p class="text-brand-cloud font-bold text-sm mb-1">KR3 · Cost discipline</p>
+                <p class="text-brand-cloud font-bold text-sm mb-1">🧾 KR3 · Cost discipline</p>
                 <p class="text-sm text-slate-300">Keep cloud spend <span class="text-white font-semibold">≤ £73/mo</span> and rent nothing until KR1 or KR2 is met. Track usage every month in the calculator below.</p>
             </div>
             <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700">
-                <p class="text-amber-400 font-bold text-sm mb-1">KR4 · Capacity</p>
+                <p class="text-amber-400 font-bold text-sm mb-1">🎮 KR4 · Capacity</p>
                 <p class="text-sm text-slate-300">Get local bot pipelines (email, research, CRM) running on 1 GPU by <span class="text-white">Q1 2027</span>, then scale to <span class="text-white font-semibold">112GB VRAM</span> within the <span class="text-white">£2,720</span> Year-1 hardware budget.</p>
             </div>
         </div>
@@ -99,7 +101,7 @@
     <!-- ============ CALCULATOR ============ -->
     <section class="glass-card p-6 mb-8 border-t-4 border-t-brand-local" id="calculator">
         <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
-            <h2 class="text-xl md:text-2xl font-bold text-white">Should I act yet? Break-even calculator</h2>
+            <h2 class="text-xl md:text-2xl font-bold text-white">🧮 Should I act yet? Break-even calculator</h2>
             <span class="text-xs text-slate-500">Each month, enter your real numbers</span>
         </div>
         <p class="text-sm text-slate-400 mb-6">This compares what your token volume <em>would</em> cost on the cloud API with what the local rig costs each month, after subtracting client income and any subscriptions you would cancel.</p>
@@ -173,7 +175,7 @@
 
         <!-- When to act -->
         <div class="mt-8 pt-6 border-t border-slate-700">
-            <h3 class="text-lg font-semibold text-white mb-4">When should I act?</h3>
+            <h3 class="text-lg font-semibold text-white mb-4">🚦 When should I act?</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                 <div class="p-4 rounded-xl border border-slate-600 bg-slate-800/40">
                     <p class="font-bold text-slate-200 mb-1">⏸ WAIT (below 50%)</p>
@@ -189,6 +191,48 @@
                 </div>
             </div>
             <p class="text-xs text-slate-500 mt-4">⚠ Check your model mix. Your DeepInfra bill ($34.79 for 3.34B tokens) is mostly cheap Flash-class models at about £0.008/M. At that price the rig only breaks even at about 56B tokens/mo, so it won't win on cost alone. The local case depends on replacing <em>DeepSeek-class</em> usage, on client income, or on privacy and sovereignty.</p>
+        </div>
+    </section>
+
+    <!-- ============ UML DIAGRAMS ============ -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div class="glass-card p-6">
+            <h2 class="text-xl font-semibold text-white mb-1">🔄 Decision states (UML state diagram)</h2>
+            <p class="text-sm text-slate-400 mb-4">The calculator moves you between these states each month. Only <span class="text-brand-success">Act</span> signs the lease. See the <a href="calendar.html" class="text-brand-local underline">📅 calendar</a> for when to check.</p>
+            <pre class="mermaid">
+stateDiagram-v2
+    [*] --> Wait: today (~20M tokens/mo)
+    Wait: ⏸ WAIT (below 50%)
+    Prepare: 🛠 PREPARE (50 to 99%)
+    Act: 🚀 ACT (100% or more)
+    Local: 🏭 Running in storage unit
+    Wait --> Prepare: volume or clients grow
+    Prepare --> Wait: usage drops
+    Prepare --> Act: crosses break-even
+    Wait --> Act: 2 clients sign
+    Act --> Prepare: under 3 months in a row
+    Act --> Local: 3 months in a row, sign lease
+    Local --> [*]
+            </pre>
+        </div>
+        <div class="glass-card p-6">
+            <h2 class="text-xl font-semibold text-white mb-1">🏗️ Target setup (UML deployment view)</h2>
+            <p class="text-sm text-slate-400 mb-4">Workloads run locally on 112GB VRAM, and DeepInfra handles only rare 671B-class tasks.</p>
+            <pre class="mermaid">
+flowchart TB
+    subgraph Unit["🏭 Storage unit (£450/mo, free ⚡)"]
+        subgraph Rig["🖥️ WRX80 node"]
+            GPU["🎮 7x RX 6800/6900 XT<br/>112GB VRAM"]
+            LLM["🧠 DeepSeek-R1-70B<br/>llama.cpp / Ollama (ROCm)"]
+            Bots["🤖 20 to 25 bots<br/>email · research · CRM"]
+            GPU --- LLM --- Bots
+        end
+        PSU["🔌 2x 1600W PSU"] --- Rig
+    end
+    Clients["🏪 Client businesses<br/>2x £225/mo"] -->|private email bots| Bots
+    You["👤 You"] -->|daily work| Bots
+    Bots -.->|rare complex tasks| Cloud["☁️ DeepInfra<br/>DeepSeek 671B"]
+            </pre>
         </div>
     </section>
 
@@ -243,7 +287,7 @@
         <!-- Left Column: Timeline -->
         <div class="glass-card p-6 lg:col-span-1">
             <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-semibold text-white">Scaling Roadmap (Year 1)</h3>
+                <h3 class="text-xl font-semibold text-white">🗺️ Scaling Roadmap (Year 1)</h3>
                 <span class="px-2 py-1 bg-slate-700 text-xs rounded-full text-brand-local font-medium">WRX80 Setup</span>
             </div>
             
@@ -310,8 +354,25 @@
             
             <!-- Chart Card -->
             <div class="glass-card p-6">
-                <h3 class="text-xl font-semibold text-white mb-2">Cost Break-Even Analysis</h3>
-                <p class="text-sm text-slate-400 mb-6">At what token volume does the £450/mo Local Rig become cheaper than Pay-as-you-go Cloud API?</p>
+                <h3 class="text-xl font-semibold text-white mb-2">📉 Cost Break-Even Analysis</h3>
+                <p class="text-sm text-slate-400 mb-4">At what token volume does the £450/mo Local Rig become cheaper than Pay-as-you-go Cloud API?</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6 text-sm">
+                    <div class="rounded-lg p-3 bg-amber-400/10 border border-amber-400/40">
+                        <p class="text-xs text-amber-300 font-semibold">📍 Your estimated usage</p>
+                        <p class="text-white text-lg font-bold">~15–20M tokens/mo</p>
+                        <p class="text-xs text-slate-400">Claude, Grok and Gemini Pro (~4M each) plus DeepInfra API</p>
+                    </div>
+                    <div class="rounded-lg p-3 bg-slate-800/60 border border-slate-700">
+                        <p class="text-xs text-slate-400 font-semibold">💳 What you pay for it</p>
+                        <p class="text-white text-lg font-bold">~£73/mo <span class="text-sm text-slate-400 font-normal">($95)</span></p>
+                        <p class="text-xs text-slate-400">At DeepSeek V3 API rates the same volume would cost only ~£7</p>
+                    </div>
+                    <div class="rounded-lg p-3 bg-slate-800/60 border border-slate-700">
+                        <p class="text-xs text-slate-400 font-semibold">📏 Gap to break-even</p>
+                        <p class="text-white text-lg font-bold">~65× more volume</p>
+                        <p class="text-xs text-slate-400">20M → 1.3B tokens/mo (~1.5% of the way there)</p>
+                    </div>
+                </div>
                 
                 <div class="w-full h-64 md:h-80 relative">
                     <canvas id="breakEvenChart"></canvas>
@@ -329,6 +390,10 @@
                         <span class="w-3 h-3 rounded-full bg-brand-success"></span>
                         <span class="text-slate-300">Break-Even Point (~1.3B)</span>
                     </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                        <span class="text-slate-300">📍 You today (~20M, £73)</span>
+                    </div>
                 </div>
             </div>
 
@@ -339,7 +404,7 @@
                     <div class="w-10 h-10 rounded-full bg-brand-success/20 flex items-center justify-center mb-3">
                         <svg class="w-5 h-5 text-brand-success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     </div>
-                    <h4 class="font-bold text-white mb-2">The Free Electricity Advantage</h4>
+                    <h4 class="font-bold text-white mb-2">⚡ The Free Electricity Advantage</h4>
                     <p class="text-sm text-slate-400">
                         Running 7 GPUs 24/7 usually costs ~£200+/mo in the UK. With free power at your storage unit, your <span class="text-white">only ongoing hurdle is the £450 rent</span>. This massive advantage allows you to run token-heavy reasoning tasks (DeepSeek-R1) all night for free.
                     </p>
@@ -350,7 +415,7 @@
                     <div class="w-10 h-10 rounded-full bg-brand-local/20 flex items-center justify-center mb-3">
                         <svg class="w-5 h-5 text-brand-local" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     </div>
-                    <h4 class="font-bold text-white mb-2">The "Zero-Token" Shortcut</h4>
+                    <h4 class="font-bold text-white mb-2">🤝 The "Zero-Token" Shortcut</h4>
                     <p class="text-sm text-slate-400">
                         To instantly beat the £450/mo cloud break-even without needing 1.3 Billion tokens of your own usage, <span class="text-white">host private UK email bots for 2 local businesses</span> at £225/mo each. This covers 100% of your rent, making your own tokens completely free.
                     </p>
@@ -577,10 +642,29 @@
                         ctx.strokeStyle = 'rgba(52, 211, 153, 0.5)';
                         ctx.stroke();
                         ctx.setLineDash([]); // Reset
+
+                        // "You are here" marker: ~20M tokens/mo (300M per x-step), current spend ~£73
+                        const ux = xAxis.getPixelForValue(20 / 300);
+                        const uy = yAxis.getPixelForValue(73);
+                        ctx.beginPath();
+                        ctx.arc(ux, uy, 7, 0, 2 * Math.PI);
+                        ctx.fillStyle = '#fbbf24';
+                        ctx.fill();
+                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = '#0f172a';
+                        ctx.stroke();
+                        ctx.font = '600 12px Inter, sans-serif';
+                        ctx.fillStyle = '#fbbf24';
+                        ctx.textAlign = 'left';
+                        ctx.fillText('📍 You: ~20M tokens, ~£73/mo', ux + 12, uy - 10);
                     }
                 }]
             });
         });
+    </script>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'dark', themeVariables: { fontFamily: 'Inter, sans-serif' }, gantt: { useWidth: Math.min(1100, document.documentElement.clientWidth - 80), barHeight: 26, barGap: 8, fontSize: 13, sectionFontSize: 14, leftPadding: 90 } });
     </script>
 </body>
 </html>

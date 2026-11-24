@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local AI Calendar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: {
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+            colors: { brand: { local: '#38bdf8', cloud: '#a78bfa', success: '#34d399', dark: '#0f172a', card: '#1e293b' } }
+        } } }
+    </script>
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 1rem; }
+        .mermaid { display: block; text-align: center; overflow-x: auto; }
+        .day { min-height: 5.5rem; }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 font-sans antialiased">
+    <script src="nav.js"></script>
+
+    <header class="mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-local to-brand-success">📅 Plan Calendar</h1>
+        <p class="text-slate-400 mt-2 text-sm md:text-base">Monthly check-ins, hardware buys, and the decision gates that tell you whether to sign the £450/mo lease. Dec 2026 to Dec 2027.</p>
+    </header>
+
+    <!-- Rhythm summary -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-sm">
+        <div class="glass-card p-5 border-t-4 border-t-brand-local">
+            <p class="text-2xl mb-1">🔁</p>
+            <p class="font-bold text-white">1st of every month: review</p>
+            <p class="text-slate-400 mt-1">Pull last month's token count from DeepInfra and local logs, then put it in the <a href="index.html#calculator" class="text-brand-local underline">🧮 calculator</a> and write down the verdict.</p>
+        </div>
+        <div class="glass-card p-5 border-t-4 border-t-amber-400">
+            <p class="text-2xl mb-1">🚦</p>
+            <p class="font-bold text-white">End of each quarter: decision gate</p>
+            <p class="text-slate-400 mt-1">Look at the last 3 monthly verdicts. 3× 🚀 ACT or 2 signed clients → sign the lease. Otherwise, decide whether this quarter's GPU buy goes ahead.</p>
+        </div>
+        <div class="glass-card p-5 border-t-4 border-t-brand-success">
+            <p class="text-2xl mb-1">🤝</p>
+            <p class="font-bold text-white">Every week: client outreach</p>
+            <p class="text-slate-400 mt-1">Contact at least one local business about a private email bot at £225/mo. Two signed clients is the fastest route to ACT.</p>
+        </div>
+    </section>
+
+    <!-- Month grid -->
+    <section class="glass-card p-4 md:p-6 mb-8">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div class="flex items-center gap-2">
+                <button id="prev" class="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600" aria-label="Previous month">◀</button>
+                <h2 id="month-title" class="text-xl font-semibold text-white w-44 text-center"></h2>
+                <button id="next" class="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600" aria-label="Next month">▶</button>
+            </div>
+            <button id="ics" class="px-3 py-1.5 rounded-lg bg-brand-success/20 text-brand-success hover:bg-brand-success/30 text-sm font-semibold">⬇️ Add all to my calendar (.ics)</button>
+        </div>
+        <div class="grid grid-cols-7 gap-1 text-xs text-slate-400 mb-1 text-center">
+            <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+        </div>
+        <div id="grid" class="grid grid-cols-7 gap-1"></div>
+        <div class="flex flex-wrap gap-4 mt-4 text-xs text-slate-400">
+            <span>🔁 Monthly review</span><span>🚦 Decision gate</span><span>🛒 Hardware buy</span><span>🛠 Build milestone</span><span>🤝 Clients</span>
+        </div>
+    </section>
+
+    <!-- Agenda -->
+    <section class="glass-card p-6 mb-8">
+        <h2 class="text-xl font-semibold text-white mb-4">🗓️ Upcoming milestones</h2>
+        <ol id="agenda" class="space-y-2 text-sm"></ol>
+    </section>
+
+    <!-- Gantt -->
+    <section class="glass-card p-6 mb-8">
+        <h2 class="text-xl font-semibold text-white mb-1">📊 Roadmap timeline</h2>
+        <p class="text-sm text-slate-400 mb-4">Every GPU buy is gated: it only goes ahead if the previous quarter ended in 🛠 PREPARE or better.</p>
+        <pre class="mermaid">
+gantt
+    dateFormat YYYY-MM-DD
+    axisFormat %b %y
+    tickInterval 1month
+    section 🖥️ Hardware
+    Turn on WRX80 + 6900 XT (home, £50)   :done,    h1, 2026-11-24, 2026-12-31
+    2x RX 6800/XT (48GB, £810)            :         h2, 2027-01-15, 2027-03-31
+    2x RX 6800/XT + 2nd PSU (80GB, £1,050):         h3, 2027-04-01, 2027-06-30
+    Final 2x RX 6800/XT (112GB, £810)     :         h4, 2027-07-01, 2027-09-30
+    section 🛠 Software
+    Local bot pipelines (email/research/CRM) :      s1, 2027-01-01, 2027-06-30
+    section 🤝 Clients
+    Outreach to local businesses           :        c1, 2026-12-01, 2027-09-30
+    section 🚦 Gates
+    Q4 gate                                :milestone, g0, 2026-12-31, 0d
+    Q1 gate                                :milestone, g1, 2027-03-31, 0d
+    Q2 gate                                :milestone, g2, 2027-06-30, 0d
+    Q3 gate - lease decision               :milestone, g3, 2027-09-30, 0d
+    section 🚀 Migration
+    Full move to storage unit (if ACT)     :crit,     m1, 2027-10-01, 2027-12-31
+        </pre>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Activity diagram -->
+        <section class="glass-card p-6">
+            <h2 class="text-xl font-semibold text-white mb-1">🔁 Monthly review (activity diagram)</h2>
+            <p class="text-sm text-slate-400 mb-4">What to do on the 1st of each month.</p>
+            <pre class="mermaid">
+flowchart TD
+    A([📅 1st of month]) --> B[📥 Export last month's tokens<br/>DeepInfra + local logs]
+    B --> C[🧮 Enter into calculator]
+    C --> D{Verdict?}
+    D -- "⏸ WAIT &lt;50%" --> E[Stay on cloud<br/>keep building at home]
+    D -- "🛠 PREPARE 50–99%" --> F[Approve next GPU buy<br/>get storage quotes]
+    D -- "🚀 ACT ≥100%" --> G{3 months<br/>in a row?}
+    G -- No --> F
+    G -- Yes --> H[✍️ Sign £450/mo lease]
+    E --> L[📝 Log verdict]
+    F --> L
+    H --> L
+    L --> Z([Next month])
+            </pre>
+        </section>
+
+        <!-- Sequence diagram -->
+        <section class="glass-card p-6">
+            <h2 class="text-xl font-semibold text-white mb-1">🤝 Client onboarding (sequence diagram)</h2>
+            <p class="text-sm text-slate-400 mb-4">The quickest way to ACT: two clients at £225/mo cover the rent.</p>
+            <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    actor You as 👤 You
+    participant Biz as 🏪 Local business
+    participant Rig as 🖥️ Local rig
+    You->>Biz: Pitch private UK email bot (£225/mo)
+    Biz-->>You: Interested, send a demo
+    You->>Rig: Run demo on 6900 XT at home
+    Rig-->>Biz: Sample replies (data stays local)
+    Biz->>You: ✍️ Signs contract
+    You->>You: Update calculator (clients + 1)
+    Note over You: 2 signed = £450 = rent covered → 🚀 ACT
+            </pre>
+        </section>
+    </div>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'dark', themeVariables: { fontFamily: 'Inter, sans-serif' }, gantt: { useWidth: Math.min(1100, document.documentElement.clientWidth - 80), barHeight: 26, barGap: 8, fontSize: 13, sectionFontSize: 14, leftPadding: 90 } });
+    </script>
+    <script>
+        // ===== Events =====
+        const events = [
+            { d: '2026-11-24', e: '🛠', t: 'Plan published: verdict ⏸ WAIT (~20M tokens/mo)', k: 'build' },
+            { d: '2026-12-15', e: '🛠', t: 'Mount WRX80 + 6900 XT at home (riser ~£50)', k: 'build' },
+            { d: '2026-12-31', e: '🚦', t: 'Q4 gate: is home rig stable? Approve Q1 GPU buy?', k: 'gate' },
+            { d: '2027-01-15', e: '🛒', t: 'Buy 2x used RX 6800/XT + risers (~£810) if gate passed', k: 'buy' },
+            { d: '2027-01-31', e: '🛠', t: 'First local bot pipeline live (email)', k: 'build' },
+            { d: '2027-03-31', e: '🚦', t: 'Q1 gate: 3 verdicts reviewed, approve dual-PSU buy?', k: 'gate' },
+            { d: '2027-04-15', e: '🛒', t: '2x RX 6800/XT + 2nd 1600W PSU (~£1,050) if gate passed', k: 'buy' },
+            { d: '2027-06-30', e: '🚦', t: 'Q2 gate: research + CRM pipelines live? 1+ client signed?', k: 'gate' },
+            { d: '2027-07-15', e: '🛒', t: 'Final 2x RX 6800/XT, 112GB VRAM (~£810) if gate passed', k: 'buy' },
+            { d: '2027-09-30', e: '🚦', t: 'Q3 gate: LEASE DECISION (3× ACT or 2 clients → sign)', k: 'gate' },
+            { d: '2027-10-01', e: '🚀', t: 'If ACT: move rig to storage unit, cancel cloud subs', k: 'build' },
+        ];
+        // Monthly reviews on the 1st, Dec 2026 – Dec 2027
+        for (let i = 0; i < 13; i++) {
+            const dt = new Date(Date.UTC(2026, 11 + i, 1));
+            events.push({ d: dt.toISOString().slice(0, 10), e: '🔁', t: 'Monthly review: tokens → calculator → log verdict', k: 'review' });
+        }
+        // Client outreach every Monday from Dec 2026
+        const outreach = [];
+        for (let dt = new Date(Date.UTC(2026, 11, 7)); dt < Date.UTC(2027, 9, 1); dt.setUTCDate(dt.getUTCDate() + 7)) {
+            outreach.push({ d: dt.toISOString().slice(0, 10), e: '🤝', t: 'Client outreach: contact 1 local business', k: 'client' });
+        }
+        const all = events.concat(outreach).sort((a, b) => a.d.localeCompare(b.d));
+        const byDay = {};
+        all.forEach((ev) => (byDay[ev.d] = byDay[ev.d] || []).push(ev));
+
+        const color = { review: 'bg-sky-400/15 text-sky-300', gate: 'bg-amber-400/15 text-amber-300', buy: 'bg-violet-400/15 text-violet-300', build: 'bg-emerald-400/15 text-emerald-300', client: 'bg-slate-600/40 text-slate-300' };
+
+        // ===== Month grid =====
+        const today = new Date();
+        let cur = new Date(Math.max(Date.UTC(2026, 10, 1), Date.UTC(today.getFullYear(), today.getMonth(), 1)));
+        const iso = (y, m, d) => `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const todayIso = iso(today.getFullYear(), today.getMonth(), today.getDate());
+
+        function render() {
+            const y = cur.getUTCFullYear(), m = cur.getUTCMonth();
+            document.getElementById('month-title').textContent = cur.toLocaleString('en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+            const first = (new Date(Date.UTC(y, m, 1)).getUTCDay() + 6) % 7; // Monday = 0
+            const days = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+            let html = '';
+            for (let i = 0; i < first; i++) html += '<div class="day rounded-lg"></div>';
+            for (let d = 1; d <= days; d++) {
+                const key = iso(y, m, d);
+                const evs = byDay[key] || [];
+                const isToday = key === todayIso;
+                html += `<div class="day rounded-lg p-1.5 bg-slate-800/50 border ${isToday ? 'border-brand-local' : 'border-slate-700/50'}">
+                    <div class="text-xs ${isToday ? 'text-brand-local font-bold' : 'text-slate-500'}">${d}</div>
+                    ${evs.map((ev) => `<div class="mt-1 text-[10px] leading-tight rounded px-1 py-0.5 ${color[ev.k]}" title="${ev.t}">${ev.e}<span class="hidden md:inline"> ${ev.t}</span></div>`).join('')}
+                </div>`;
+            }
+            document.getElementById('grid').innerHTML = html;
+        }
+        document.getElementById('prev').onclick = () => { cur.setUTCMonth(cur.getUTCMonth() - 1); render(); };
+        document.getElementById('next').onclick = () => { cur.setUTCMonth(cur.getUTCMonth() + 1); render(); };
+        render();
+
+        // ===== Agenda (non-outreach, upcoming) =====
+        document.getElementById('agenda').innerHTML = events
+            .filter((ev) => ev.d >= todayIso && ev.k !== 'review').sort((a, b) => a.d.localeCompare(b.d))
+            .map((ev) => `<li class="flex gap-3 items-start"><span class="shrink-0 w-28 text-slate-400">${new Date(ev.d + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })}</span><span class="rounded px-2 py-0.5 ${color[ev.k]}">${ev.e} ${ev.t}</span></li>`)
+            .join('') || '<li class="text-slate-400">No upcoming milestones.</li>';
+
+        // ===== ICS export =====
+        document.getElementById('ics').onclick = () => {
+            const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//local-ai-setup-plan//EN', 'CALSCALE:GREGORIAN'];
+            all.forEach((ev, i) => {
+                const start = ev.d.replace(/-/g, '');
+                const next = new Date(ev.d + 'T00:00:00Z'); next.setUTCDate(next.getUTCDate() + 1);
+                lines.push('BEGIN:VEVENT', `UID:${start}-${i}@local-ai-setup-plan`, `DTSTAMP:${start}T000000Z`,
+                    `DTSTART;VALUE=DATE:${start}`, `DTEND;VALUE=DATE:${next.toISOString().slice(0, 10).replace(/-/g, '')}`,
+                    `SUMMARY:${ev.e} ${ev.t.replace(/[,;]/g, '\\$&')}`,
+                    'DESCRIPTION:https://rifaterdemsahin.github.io/local-ai-setup-plan/calendar.html', 'END:VEVENT');
+            });
+            lines.push('END:VCALENDAR');
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([lines.join('\r\n')], { type: 'text/calendar' }));
+            a.download = 'local-ai-plan.ics';
+            a.click();
+        };
+    </script>
+</body>
+</html>
