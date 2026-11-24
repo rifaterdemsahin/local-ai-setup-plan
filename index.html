@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Infrastructure Scaling: Local vs Cloud</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            local: '#38bdf8', // Light blue
+                            cloud: '#a78bfa', // Purple
+                            success: '#34d399', // Green
+                            dark: '#0f172a',  // Slate 900
+                            card: '#1e293b',  // Slate 800
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 font-sans antialiased">
+
+    <!-- Header -->
+    <header class="mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-local to-brand-success">
+            AI Infrastructure Strategy
+        </h1>
+        <p class="text-slate-400 mt-2 text-sm md:text-base">
+            Executive Summary: 7-GPU WRX80 Local Rig vs. DeepInfra / Cloud Subs (Q4 2026 - Q3 2027)
+        </p>
+    </header>
+
+    <!-- Top KPIs -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- KPI 1 -->
+        <div class="glass-card p-6 border-t-4 border-t-brand-cloud">
+            <p class="text-slate-400 text-sm font-medium uppercase tracking-wider mb-1">Current Cloud Spend</p>
+            <h2 class="text-3xl font-bold text-white">~$95 <span class="text-lg text-slate-500 font-normal">/ mo</span></h2>
+            <p class="text-xs text-slate-400 mt-2">£73/mo (DeepInfra API + Pro Subs)</p>
+            <div class="mt-4 flex items-center text-xs font-semibold text-brand-cloud">
+                <span>≈ 15M - 20M Tokens/mo</span>
+            </div>
+        </div>
+
+        <!-- KPI 2 -->
+        <div class="glass-card p-6 border-t-4 border-t-brand-local">
+            <p class="text-slate-400 text-sm font-medium uppercase tracking-wider mb-1">Local Rig Fixed Cost</p>
+            <h2 class="text-3xl font-bold text-white">£450 <span class="text-lg text-slate-500 font-normal">/ mo</span></h2>
+            <p class="text-xs text-slate-400 mt-2">Storage Rent (£450) + Electricity (£0 - Free)</p>
+            <div class="mt-4 flex items-center text-xs font-semibold text-brand-local">
+                <span>Hardware Paid Separately (£2,720 Y1)</span>
+            </div>
+        </div>
+
+        <!-- KPI 3 -->
+        <div class="glass-card p-6 border-t-4 border-t-brand-success">
+            <p class="text-slate-400 text-sm font-medium uppercase tracking-wider mb-1">Break-Even Target</p>
+            <h2 class="text-3xl font-bold text-white">1.3B <span class="text-lg text-slate-500 font-normal">Tokens</span></h2>
+            <p class="text-xs text-slate-400 mt-2">Volume needed to beat £450/mo cloud cost</p>
+            <div class="mt-4 flex items-center text-xs font-semibold text-brand-success">
+                <span>Or ~43,000 tasks/day (DeepSeek V3)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left Column: Timeline -->
+        <div class="glass-card p-6 lg:col-span-1">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold text-white">Scaling Roadmap (Year 1)</h3>
+                <span class="px-2 py-1 bg-slate-700 text-xs rounded-full text-brand-local font-medium">WRX80 Setup</span>
+            </div>
+            
+            <div class="relative border-l border-slate-700 ml-3 space-y-8">
+                <!-- Q4 2026 -->
+                <div class="relative pl-6">
+                    <div class="absolute w-3 h-3 bg-brand-local rounded-full -left-[6.5px] top-1.5 shadow-[0_0_10px_#38bdf8]"></div>
+                    <h4 class="font-bold text-slate-200">Q4 2026: Turn On</h4>
+                    <p class="text-sm text-slate-400 mt-1 mb-2">Mount WRX80, existing drives/RAM/PSU, and your <span class="text-white font-medium">1x RX 6900 XT</span>.</p>
+                    <div class="flex justify-between items-center text-xs bg-slate-800 p-2 rounded">
+                        <span class="text-brand-success">Cost: ~£50 (Riser)</span>
+                        <span class="text-slate-300">VRAM: 16GB</span>
+                    </div>
+                </div>
+
+                <!-- Q1 2027 -->
+                <div class="relative pl-6">
+                    <div class="absolute w-3 h-3 bg-slate-500 rounded-full -left-[6.5px] top-1.5 border-2 border-slate-900"></div>
+                    <h4 class="font-bold text-slate-200">Q1 2027: Expand</h4>
+                    <p class="text-sm text-slate-400 mt-1 mb-2">Add <span class="text-white font-medium">2x used RX 6800/XT</span> and 2x risers.</p>
+                    <div class="flex justify-between items-center text-xs bg-slate-800 p-2 rounded">
+                        <span class="text-brand-success">Cost: ~£810</span>
+                        <span class="text-slate-300">VRAM: 48GB (3 GPUs)</span>
+                    </div>
+                </div>
+
+                <!-- Q2 2027 -->
+                <div class="relative pl-6">
+                    <div class="absolute w-3 h-3 bg-slate-500 rounded-full -left-[6.5px] top-1.5 border-2 border-slate-900"></div>
+                    <h4 class="font-bold text-slate-200">Q2 2027: Dual-PSU</h4>
+                    <p class="text-sm text-slate-400 mt-1 mb-2">Add <span class="text-white font-medium">2x used RX 6800/XT</span>, 2nd 1600W PSU, and risers.</p>
+                    <div class="flex justify-between items-center text-xs bg-slate-800 p-2 rounded">
+                        <span class="text-brand-success">Cost: ~£1,050</span>
+                        <span class="text-slate-300">VRAM: 80GB (5 GPUs)</span>
+                    </div>
+                </div>
+
+                <!-- Q3 2027 -->
+                <div class="relative pl-6">
+                    <div class="absolute w-3 h-3 bg-slate-500 rounded-full -left-[6.5px] top-1.5 border-2 border-slate-900"></div>
+                    <h4 class="font-bold text-slate-200">Q3 2027: Maxed Out</h4>
+                    <p class="text-sm text-slate-400 mt-1 mb-2">Add final <span class="text-white font-medium">2x used RX 6800/XT</span> to fill all 7 slots.</p>
+                    <div class="flex justify-between items-center text-xs bg-slate-800 p-2 rounded">
+                        <span class="text-brand-success">Cost: ~£810</span>
+                        <span class="text-slate-300">VRAM: 112GB (7 GPUs)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 pt-4 border-t border-slate-700">
+                <div class="flex justify-between text-sm">
+                    <span class="text-slate-400">Total Y1 Hardware:</span>
+                    <span class="font-bold text-white">£2,720</span>
+                </div>
+                <div class="flex justify-between text-sm mt-1">
+                    <span class="text-slate-400">Total Y1 Rent (£450x12):</span>
+                    <span class="font-bold text-white">£5,400</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Charts & Insights -->
+        <div class="lg:col-span-2 space-y-8">
+            
+            <!-- Chart Card -->
+            <div class="glass-card p-6">
+                <h3 class="text-xl font-semibold text-white mb-2">Cost Break-Even Analysis</h3>
+                <p class="text-sm text-slate-400 mb-6">At what token volume does the £450/mo Local Rig become cheaper than Pay-as-you-go Cloud API?</p>
+                
+                <div class="w-full h-64 md:h-80 relative">
+                    <canvas id="breakEvenChart"></canvas>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-6 mt-4 text-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-brand-cloud"></span>
+                        <span class="text-slate-300">Cloud API Spend (Linear)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-brand-local"></span>
+                        <span class="text-slate-300">Local Rig (£450 Fixed)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-brand-success"></span>
+                        <span class="text-slate-300">Break-Even Point (~1.3B)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Insights Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Insight 1 -->
+                <div class="bg-slate-800/50 p-5 rounded-xl border border-slate-700 hover:border-brand-success transition-colors">
+                    <div class="w-10 h-10 rounded-full bg-brand-success/20 flex items-center justify-center mb-3">
+                        <svg class="w-5 h-5 text-brand-success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h4 class="font-bold text-white mb-2">The Free Electricity Advantage</h4>
+                    <p class="text-sm text-slate-400">
+                        Running 7 GPUs 24/7 usually costs ~£200+/mo in the UK. With free power at your storage unit, your <span class="text-white">only ongoing hurdle is the £450 rent</span>. This massive advantage allows you to run token-heavy reasoning tasks (DeepSeek-R1) all night for free.
+                    </p>
+                </div>
+
+                <!-- Insight 2 -->
+                <div class="bg-slate-800/50 p-5 rounded-xl border border-slate-700 hover:border-brand-local transition-colors">
+                    <div class="w-10 h-10 rounded-full bg-brand-local/20 flex items-center justify-center mb-3">
+                        <svg class="w-5 h-5 text-brand-local" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    </div>
+                    <h4 class="font-bold text-white mb-2">The "Zero-Token" Shortcut</h4>
+                    <p class="text-sm text-slate-400">
+                        To instantly beat the £450/mo cloud break-even without needing 1.3 Billion tokens of your own usage, <span class="text-white">host private UK email bots for 2 local businesses</span> at £225/mo each. This covers 100% of your rent, making your own tokens completely free.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Chart.js Setup
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('breakEvenChart').getContext('2d');
+            
+            // X-Axis Data (Millions of Tokens)
+            const labels = ['0', '300M', '600M', '900M', '1.2B', '1.5B', '1.8B', '2.1B'];
+            
+            // Y-Axis Data
+            // Local fixed at £450
+            const localData = [450, 450, 450, 450, 450, 450, 450, 450];
+            
+            // Cloud cost estimated at ~£0.35 per 1M tokens (DeepSeek V3 Blended Rate)
+            // Subs + minimal API is ~$95 (£73) up to ~20M, then it scales linearly. 
+            // For simplicity, we'll plot the pure API usage scaling.
+            // 300M * 0.35 = £105, 1200M * 0.35 = £420, 1500 * 0.35 = £525
+            const cloudData = [
+                0, 
+                105, 
+                210, 
+                315, 
+                420, 
+                525, 
+                630, 
+                735
+            ];
+
+            // Setup gradient for Cloud line
+            let gradientCloud = ctx.createLinearGradient(0, 0, 0, 400);
+            gradientCloud.addColorStop(0, 'rgba(167, 139, 250, 0.5)'); // brand-cloud with opacity
+            gradientCloud.addColorStop(1, 'rgba(167, 139, 250, 0.0)');
+
+            const breakEvenChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Cloud API Cost (£)',
+                            data: cloudData,
+                            borderColor: '#a78bfa',
+                            backgroundColor: gradientCloud,
+                            borderWidth: 3,
+                            tension: 0.3,
+                            fill: true,
+                            pointBackgroundColor: '#a78bfa',
+                            pointBorderColor: '#0f172a',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: 'Local Rig Fixed Cost (£450)',
+                            data: localData,
+                            borderColor: '#38bdf8',
+                            borderWidth: 3,
+                            borderDash: [5, 5],
+                            tension: 0,
+                            fill: false,
+                            pointRadius: 0,
+                            pointHoverRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // Handled in custom HTML below chart
+                        },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            titleColor: '#f8fafc',
+                            bodyColor: '#cbd5e1',
+                            borderColor: '#334155',
+                            borderWidth: 1,
+                            padding: 10,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP', maximumSignificantDigits: 3 }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#94a3b8',
+                                callback: function(value, index, values) {
+                                    return '£' + value;
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'breakEvenAnnotation',
+                    afterDraw: (chart) => {
+                        const ctx = chart.ctx;
+                        const xAxis = chart.scales.x;
+                        const yAxis = chart.scales.y;
+                        
+                        // Roughly where 1.3B is (between 1.2B and 1.5B index)
+                        // 1.2B is index 4, 1.5B is index 5. 1.3B is ~33% between them.
+                        const xPos = xAxis.getPixelForValue(4.33); 
+                        const yPos = yAxis.getPixelForValue(450);
+
+                        // Draw intersection point
+                        ctx.beginPath();
+                        ctx.arc(xPos, yPos, 8, 0, 2 * Math.PI);
+                        ctx.fillStyle = '#1e293b'; // background
+                        ctx.fill();
+                        ctx.lineWidth = 3;
+                        ctx.strokeStyle = '#34d399'; // success color
+                        ctx.stroke();
+
+                        // Draw dotted line down
+                        ctx.beginPath();
+                        ctx.setLineDash([4, 4]);
+                        ctx.moveTo(xPos, yPos + 8);
+                        ctx.lineTo(xPos, yAxis.bottom);
+                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = 'rgba(52, 211, 153, 0.5)';
+                        ctx.stroke();
+                        ctx.setLineDash([]); // Reset
+                    }
+                }]
+            });
+        });
+    </script>
+</body>
+</html>
