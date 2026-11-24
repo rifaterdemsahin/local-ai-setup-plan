@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Boats Voyage</title>
+    <meta name="description" content="A 24-month game: a diversified fleet of AI providers and a local rig vs a single-vendor Titanic.">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: {
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+            colors: { brand: { local: '#38bdf8', cloud: '#a78bfa', success: '#34d399', dark: '#0f172a', card: '#1e293b' } }
+        } } }
+    </script>
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; overflow-x: hidden; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 1rem; }
+        @keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-5px) } }
+        @keyframes wave { from { transform: translateX(0) } to { transform: translateX(-80px) } }
+        .bob { animation: bob 3s ease-in-out infinite; }
+        .bob2 { animation: bob 2.4s ease-in-out infinite .4s; }
+        .bob3 { animation: bob 2.8s ease-in-out infinite .8s; }
+        .wave { animation: wave 6s linear infinite; }
+        .ship { transition: transform 1.2s ease-in-out; }
+        .iceberg { transition: transform 1.2s ease-in-out; }
+        .fleet-boat { transition: opacity .8s; }
+        .action:disabled { opacity: .4; cursor: not-allowed; }
+        @keyframes pop { 0% { transform: scale(.6); opacity: 0 } 60% { transform: scale(1.1) } 100% { transform: scale(1); opacity: 1 } }
+        .pop { animation: pop .5s ease-out; }
+        @media (prefers-reduced-motion: reduce) { .bob,.bob2,.bob3,.wave,.pop { animation: none } }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 font-sans antialiased">
+    <script src="nav.js"></script>
+
+    <header class="mb-6">
+        <h1 class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-local to-brand-success">🚢 Two Boats: a 24-month voyage</h1>
+        <p class="text-slate-400 mt-2 text-sm md:text-base max-w-3xl">
+            <span class="text-brand-success font-semibold">⛵ You</span> run a <em>fleet</em>: cloud subs, DeepInfra, and a growing local rig, and you switch boats when the weather turns.
+            <span class="text-red-300 font-semibold">🛳️ The other captain</span> is all-in on one paid vendor (Claude only). It's a grand ship, but every price hike, cap, outage and policy change lands on the same hull, and its <span class="text-white">risk keeps rising</span>.
+            Choose one action each month and see who reaches port.
+        </p>
+    </header>
+
+    <!-- HUD -->
+    <section class="glass-card p-4 mb-4 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+        <div><span class="text-slate-400">📅 Month</span> <span id="hud-month" class="text-white font-bold"></span></div>
+        <div><span class="text-slate-400">⭐ XP</span> <span id="hud-xp" class="text-amber-300 font-bold">0</span></div>
+        <div><span class="text-slate-400">🎖️ Rank</span> <span id="hud-rank" class="text-white font-bold"></span></div>
+        <div class="flex-1 min-w-[140px]">
+            <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden"><div id="hud-xpbar" class="h-full bg-amber-400 transition-all"></div></div>
+        </div>
+        <div><span class="text-slate-400">🏆 Best</span> <span id="hud-best" class="text-white font-bold">–</span></div>
+    </section>
+
+    <!-- Ocean -->
+    <section class="glass-card p-2 md:p-4 mb-4 overflow-hidden">
+        <svg id="ocean" viewBox="0 0 800 280" class="w-full h-auto block" role="img" aria-label="Your fleet on the left, the single-vendor ship and an approaching iceberg on the right">
+            <defs>
+                <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1222"/><stop offset="1" stop-color="#1e293b"/></linearGradient>
+                <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0e4a6e"/><stop offset="1" stop-color="#082032"/></linearGradient>
+            </defs>
+            <rect width="800" height="280" fill="url(#sky)"/>
+            <g fill="#e2e8f0" opacity=".6"><circle cx="60" cy="30" r="1.2"/><circle cx="210" cy="55" r="1"/><circle cx="380" cy="22" r="1.4"/><circle cx="520" cy="48" r="1"/><circle cx="700" cy="28" r="1.2"/></g>
+            <text x="200" y="36" text-anchor="middle" fill="#34d399" font-size="15" font-weight="700">⛵ YOUR FLEET</text>
+            <text x="600" y="36" text-anchor="middle" fill="#fca5a5" font-size="15" font-weight="700">🛳️ CLAUDE-ONLY</text>
+            <line x1="400" y1="20" x2="400" y2="180" stroke="#334155" stroke-dasharray="4 6"/>
+
+            <!-- Fleet -->
+            <g id="boat-subs" class="fleet-boat"><g class="bob"><text x="80" y="185" font-size="44" text-anchor="middle">⛵</text><text x="80" y="210" font-size="10" fill="#cbd5e1" text-anchor="middle">Cloud subs</text></g></g>
+            <g id="boat-deepinfra" class="fleet-boat" opacity=".15"><g class="bob2"><text x="170" y="188" font-size="40" text-anchor="middle">🚤</text><text x="170" y="210" font-size="10" fill="#cbd5e1" text-anchor="middle">DeepInfra</text></g></g>
+            <g id="boat-local" class="fleet-boat" opacity=".15"><g class="bob3"><text x="260" y="186" font-size="42" text-anchor="middle">🛥️</text><text x="260" y="210" font-size="10" fill="#cbd5e1" text-anchor="middle">Home rig</text></g></g>
+            <g id="boat-unit" class="fleet-boat" opacity=".15"><g class="bob"><text x="345" y="186" font-size="42" text-anchor="middle">🚢</text><text x="345" y="210" font-size="10" fill="#cbd5e1" text-anchor="middle">7-GPU unit</text></g></g>
+            <text id="you-flag" x="200" y="120" text-anchor="middle" font-size="12" fill="#34d399"></text>
+
+            <!-- Titanic -->
+            <g class="bob2">
+                <g id="titanic" class="ship">
+                    <rect x="520" y="128" width="12" height="30" fill="#1f2937"/><rect x="520" y="128" width="12" height="7" fill="#111"/>
+                    <rect x="548" y="124" width="12" height="34" fill="#f59e0b"/><rect x="548" y="124" width="12" height="7" fill="#111"/>
+                    <rect x="576" y="124" width="12" height="34" fill="#f59e0b"/><rect x="576" y="124" width="12" height="7" fill="#111"/>
+                    <rect x="604" y="124" width="12" height="34" fill="#f59e0b"/><rect x="604" y="124" width="12" height="7" fill="#111"/>
+                    <rect x="505" y="156" width="130" height="14" fill="#f8fafc"/>
+                    <g fill="#facc15"><circle cx="520" cy="163" r="2"/><circle cx="540" cy="163" r="2"/><circle cx="560" cy="163" r="2"/><circle cx="580" cy="163" r="2"/><circle cx="600" cy="163" r="2"/><circle cx="620" cy="163" r="2"/></g>
+                    <path d="M480 170 L670 170 L650 200 L495 200 Z" fill="#111827" stroke="#7f1d1d" stroke-width="2"/>
+                    <text x="572" y="190" text-anchor="middle" font-size="10" fill="#fca5a5" font-weight="700">SINGLE VENDOR</text>
+                </g>
+            </g>
+            <g id="iceberg" class="iceberg">
+                <path d="M730 195 L752 140 L768 158 L782 120 L800 195 Z" fill="#e0f2fe" stroke="#7dd3fc"/>
+                <path d="M722 195 L810 195 L790 240 L740 245 Z" fill="#bae6fd" opacity=".35"/>
+            </g>
+            <text id="sos" x="580" y="100" text-anchor="middle" font-size="14" fill="#f87171" font-weight="700"></text>
+
+            <!-- Sea -->
+            <rect y="195" width="800" height="85" fill="url(#sea)"/>
+            <g class="wave" opacity=".5"><path d="M0 198 q20 -8 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" fill="none" stroke="#7dd3fc" stroke-width="2"/></g>
+            <text id="event-banner" x="400" y="255" text-anchor="middle" font-size="15" fill="#f8fafc" font-weight="600"></text>
+        </svg>
+    </section>
+
+    <!-- Actions -->
+    <section class="glass-card p-4 mb-4">
+        <div class="flex flex-wrap items-baseline justify-between gap-2 mb-3">
+            <h2 class="text-lg font-semibold text-white">🧭 Your move this month</h2>
+            <p class="text-xs text-slate-400">One action, then the sea answers with a random event.</p>
+        </div>
+        <div id="actions" class="grid grid-cols-2 lg:grid-cols-5 gap-2 text-sm"></div>
+        <div class="flex flex-wrap gap-2 mt-3 text-sm">
+            <button id="autoplay" class="px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600">⏩ Auto-captain</button>
+            <button id="restart" class="px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600">🎲 New voyage</button>
+        </div>
+    </section>
+
+    <!-- Comparison -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="glass-card p-5 border-t-4 border-t-brand-success">
+            <h3 class="font-bold text-white mb-3">⛵ You: the fleet</h3>
+            <dl class="grid grid-cols-2 gap-3 text-sm">
+                <div><dt class="text-slate-400 text-xs">This month</dt><dd id="you-cost" class="text-white text-lg font-bold"></dd></div>
+                <div><dt class="text-slate-400 text-xs">Total spent</dt><dd id="you-total" class="text-white text-lg font-bold"></dd></div>
+                <div><dt class="text-slate-400 text-xs">Boats in fleet</dt><dd id="you-boats" class="text-white text-lg font-bold"></dd></div>
+                <div><dt class="text-slate-400 text-xs">Clients · VRAM</dt><dd id="you-assets" class="text-white text-lg font-bold"></dd></div>
+            </dl>
+            <p class="text-xs text-slate-400 mt-4 mb-1">⚠️ Risk</p>
+            <div class="w-full h-3 bg-slate-900 rounded-full overflow-hidden"><div id="you-risk" class="h-full rounded-full transition-all"></div></div>
+            <p id="you-risk-txt" class="text-xs text-slate-400 mt-1"></p>
+        </div>
+        <div class="glass-card p-5 border-t-4 border-t-red-400">
+            <h3 class="font-bold text-white mb-3">🛳️ Claude-only captain</h3>
+            <dl class="grid grid-cols-2 gap-3 text-sm">
+                <div><dt class="text-slate-400 text-xs">This month</dt><dd id="cl-cost" class="text-white text-lg font-bold"></dd></div>
+                <div><dt class="text-slate-400 text-xs">Total spent</dt><dd id="cl-total" class="text-white text-lg font-bold"></dd></div>
+                <div><dt class="text-slate-400 text-xs">Plan</dt><dd id="cl-plan" class="text-white text-lg font-bold"></dd></div>
+                <div><dt class="text-slate-400 text-xs">Lifeboats</dt><dd class="text-white text-lg font-bold">0</dd></div>
+            </dl>
+            <p class="text-xs text-slate-400 mt-4 mb-1">⚠️ Risk</p>
+            <div class="w-full h-3 bg-slate-900 rounded-full overflow-hidden"><div id="cl-risk" class="h-full rounded-full transition-all"></div></div>
+            <p id="cl-risk-txt" class="text-xs text-slate-400 mt-1"></p>
+        </div>
+    </section>
+
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
+        <div class="glass-card p-5 lg:col-span-2">
+            <h3 class="font-bold text-white mb-3">📜 Ship's log</h3>
+            <ol id="log" class="space-y-2 text-sm max-h-72 overflow-y-auto pr-1"></ol>
+        </div>
+        <div class="glass-card p-5">
+            <h3 class="font-bold text-white mb-3">🏅 Badges</h3>
+            <div id="badges" class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 gap-2 text-center text-xs"></div>
+        </div>
+    </section>
+
+    <!-- End-of-voyage dialog -->
+    <div id="end" class="hidden fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
+        <div class="glass-card bg-slate-900 p-6 max-w-lg w-full pop">
+            <h2 id="end-title" class="text-2xl font-bold text-white mb-2"></h2>
+            <div id="end-body" class="text-sm text-slate-300 space-y-2"></div>
+            <div class="flex flex-wrap gap-2 mt-5">
+                <button id="end-again" class="px-4 py-2 rounded-lg bg-brand-success/20 text-brand-success font-semibold hover:bg-brand-success/30">🎲 Sail again</button>
+                <a href="index.html#calculator" class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600">🧮 Check real numbers</a>
+            </div>
+        </div>
+    </div>
+
+    <p class="text-xs text-slate-500 max-w-3xl mb-4">ℹ️ This is an illustrative game, not a forecast. Prices and event odds are rough assumptions: Pro ≈ £16, Max ≈ £80/£160, your cloud mix ≈ £73, rent £450, clients £225. The point is <em>concentration risk</em>. One great vendor is still one point of failure, and a fleet can switch boats. Your fleet has its own risks too (GPU failures, rent), and the game counts them.</p>
+
+    <script>
+    (function () {
+        const $ = (id) => document.getElementById(id);
+        const gbp = (v) => '£' + Math.round(v).toLocaleString('en-GB');
+        const MONTHS = 24, START = new Date(Date.UTC(2026, 11, 1));
+        const RANKS = [[0, '🧹 Deckhand'], [60, '⚓ Bosun'], [150, '🧭 Navigator'], [260, '🎩 First Mate'], [400, '👨‍✈️ Captain'], [560, '🎖️ Admiral']];
+        const BADGES = {
+            firstSwitch: ['🚤', 'Boat switcher', 'Moved a workload to another provider'],
+            pipeline:   ['🔧', 'Builder', 'First local pipeline'],
+            gpu:        ['🎮', 'GPU hoarder', 'Bought your first GPU pair'],
+            maxed:      ['💾', '112GB club', 'Filled all 7 slots'],
+            client:     ['🤝', 'First client', 'Signed a paying client'],
+            rentFree:   ['🏭', 'Rent-free', '2 clients cover the £450 rent'],
+            lease:      ['🗝️', 'Harbourmaster', 'Signed the storage lease'],
+            calm:       ['🌊', 'Calm captain', 'Your risk under 15%'],
+            dodge:      ['🛟', 'Dodged it', 'An event hit the Titanic hard and barely touched you'],
+            iceberg:    ['🧊', 'Witness', 'Saw the single-vendor ship hit the iceberg'],
+            port:       ['⚓', 'Reached port', 'Finished all 24 months'],
+            cheaper:    ['💷', 'Cheaper fleet', 'Ended the voyage spending less than the Titanic'],
+        };
+        const EVENTS = [
+            { e: '💸', t: 'Vendor price/plan change', cl: 12, you: 2, clCost: 15, w: 3, d: 'Single-vendor plan gets pricier. You shift that load to another boat.' },
+            { e: '🚧', t: 'Usage cap hit mid-week', cl: 9, you: 1, w: 4, d: 'Claude-only is blocked until reset. You switch to DeepInfra or local.' },
+            { e: '🌩️', t: 'Major outage', cl: 7, you: 1, w: 3, d: 'One vendor is down for hours. Every other boat in your fleet is still sailing.' },
+            { e: '📜', t: 'Policy / terms change', cl: 8, you: 2, w: 2, d: 'New rules on data or usage. Local weights never change their terms.' },
+            { e: '🪦', t: 'Model retired / behaviour shift', cl: 7, you: 2, w: 2, d: 'Prompts tuned for the old model break. Your pinned local model stays the same.' },
+            { e: '📉', t: 'New open-weights model drops', cl: 3, you: -5, w: 3, d: 'A stronger open model lands. The local rig gets better for free.' },
+            { e: '🛒', t: 'Used GPU prices fall', cl: 1, you: -2, gpuSale: true, w: 2, d: 'RX 6800/XT gets cheaper this month. GPU buys cost 25% less.' },
+            { e: '🔥', t: 'GPU fan dies', cl: 0, you: 6, youCost: 120, needs: 'gpu', w: 2, d: 'Your rig has risks too: £120 to repair.' },
+            { e: '⚡', t: 'Storage unit power cut', cl: 0, you: 5, needs: 'lease', w: 1, d: 'The rig is offline for a day. Cloud boats cover the gap.' },
+            { e: '🌤️', t: 'Calm seas', cl: 0, you: -2, w: 5, d: 'Quiet month. Diversified fleets recover a bit.' },
+        ];
+
+        let S, auto = null;
+        function fresh() {
+            return { m: 0, xp: 0, badges: new Set(), log: [], done: false,
+                you: { total: 0, risk: 18, boats: 1, pipelines: 0, gpus: 1, clients: 0, lease: false, pitches: 0, sale: false, last: 73 },
+                cl: { total: 0, risk: 12, hike: 0, sunk: false, last: 16, usage: 20 } };
+        }
+        let best = null; try { best = JSON.parse(localStorage.getItem('voyage-best')); } catch (e) {}
+
+        const vram = () => S.you.gpus === 1 ? 16 : 16 + (S.you.gpus - 1) * 16;
+        const diversification = () => Math.min(.85, .15 * S.you.boats + .06 * S.you.pipelines + (S.you.lease ? .1 : 0));
+
+        function youMonthlyCost() {
+            const y = S.you;
+            const cloud = Math.max(18, 73 - 9 * y.pipelines);
+            return cloud + (y.lease ? 450 : 0) - y.clients * 225;
+        }
+        function clMonthlyCost() {
+            const c = S.cl;
+            const plan = c.usage < 40 ? 16 : c.usage < 120 ? 80 : 160;
+            const overage = c.usage > 300 ? (c.usage - 300) * 0.35 : 0; // API overage once Max isn't enough
+            return plan + c.hike + overage;
+        }
+        const clPlan = () => S.cl.usage < 40 ? 'Pro' : S.cl.usage < 120 ? 'Max 5×' : S.cl.usage > 300 ? 'Max 20× + API' : 'Max 20×';
+
+        const ACTIONS = [
+            { id: 'switch', label: '🚤 Switch boats', hint: () => S.you.boats < 2 ? 'Add DeepInfra to the fleet (−6 risk)' : 'Rebalance workloads (−2 risk)', ok: () => true,
+              run: () => { const first = S.you.boats < 2; if (first) S.you.boats = 2; S.you.risk -= first ? 6 : 2; award('firstSwitch'); return first ? 'Added DeepInfra to the fleet. Cheap Flash models now carry the bulk load.' : 'Rebalanced the workloads across the fleet.'; } },
+            { id: 'build', label: '🔧 Build pipeline', hint: 'Local bot (email/research/CRM): cloud −£9/mo', ok: () => S.you.pipelines < 6,
+              run: () => { S.you.pipelines++; if (S.you.boats < 3) S.you.boats = 3; S.you.risk -= 3; award('pipeline'); return `Local pipeline #${S.you.pipelines} is live on the home rig.`; } },
+            { id: 'gpu', label: '🛒 Buy 2 GPUs', hint: () => `2x RX 6800/XT, ${gbp(S.you.sale ? 608 : 810)} one-off`, ok: () => S.you.gpus < 7,
+              run: () => { const c = S.you.sale ? 608 : 810; S.you.total += c; S.you.gpus = Math.min(7, S.you.gpus + 2); award('gpu'); if (S.you.gpus >= 7) award('maxed'); return `Bought 2 GPUs for ${gbp(c)}. VRAM is now ${vram()}GB.`; } },
+            { id: 'pitch', label: '🤝 Pitch a client', hint: () => `Email bot £225/mo, ${Math.round(pitchOdds() * 100)}% odds`, ok: () => S.you.clients < 2,
+              run: () => { S.you.pitches++; if (Math.random() < pitchOdds()) { S.you.clients++; award('client'); if (S.you.clients >= 2) award('rentFree'); return `✍️ Client #${S.you.clients} signed at £225/mo!`; } return 'Pitch went well, but no signature yet. Your odds go up next time.'; } },
+            { id: 'lease', label: '🏭 Sign lease', hint: '£450/mo unit, free ⚡. Best with 2 clients', ok: () => !S.you.lease && S.you.gpus >= 3,
+              run: () => { S.you.lease = true; S.you.boats = 4; award('lease'); return 'The 7-GPU unit is commissioned and the whole fleet is at sea.'; } },
+        ];
+        const pitchOdds = () => Math.min(.75, .2 + .1 * S.you.pitches + .08 * S.you.pipelines);
+
+        function award(k) { if (!S.badges.has(k)) { S.badges.add(k); S.xp += 25; log('🏅', `Badge: ${BADGES[k][0]} ${BADGES[k][1]}`, 'text-amber-300'); } }
+        function log(e, t, cls = 'text-slate-300') { S.log.unshift({ m: S.m, e, t, cls }); }
+        const monthName = (m) => new Date(Date.UTC(START.getUTCFullYear(), START.getUTCMonth() + m, 1)).toLocaleString('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+
+        function pickEvent() {
+            const pool = EVENTS.filter((ev) => !ev.needs || (ev.needs === 'gpu' ? S.you.gpus > 1 : S.you.lease));
+            let r = Math.random() * pool.reduce((s, e) => s + e.w, 0);
+            for (const ev of pool) { if ((r -= ev.w) <= 0) return ev; }
+            return pool[0];
+        }
+
+        function turn(actionId) {
+            if (S.done) return;
+            const a = ACTIONS.find((x) => x.id === actionId);
+            if (!a || !a.ok()) return;
+            S.you.sale = false;
+            log('🧭', a.run(), 'text-sky-300');
+            S.xp += 10;
+
+            // The sea answers
+            const ev = pickEvent();
+            const youHit = Math.max(-8, Math.round(ev.you * (ev.you > 0 ? 1 - diversification() : 1)));
+            S.you.risk += youHit + 0.5;
+            if (ev.youCost) S.you.total += ev.youCost;
+            if (ev.gpuSale) S.you.sale = true;
+            if (!S.cl.sunk) { S.cl.risk += ev.cl + 2.5 + S.m * 0.15; if (ev.clCost) S.cl.hike += ev.clCost; }
+            if (ev.cl >= 7 && youHit <= 1) award('dodge');
+            log(ev.e, `${ev.t}: ${ev.d} (🛳️ +${ev.cl} risk · ⛵ ${youHit >= 0 ? '+' : ''}${youHit})`);
+            $('event-banner').textContent = `${ev.e} ${ev.t}`;
+
+            // Costs
+            S.cl.usage *= 1.18;
+            S.you.last = youMonthlyCost(); S.you.total += S.you.last;
+            S.cl.last = clMonthlyCost(); S.cl.total += S.cl.last;
+
+            S.you.risk = Math.max(3, Math.min(100, S.you.risk));
+            S.cl.risk = Math.max(3, Math.min(100, S.cl.risk));
+            if (S.you.risk < 15) award('calm');
+            if (S.cl.risk >= 100 && !S.cl.sunk) {
+                S.cl.sunk = true; S.cl.total += 600;
+                log('🧊', 'The single-vendor ship hit the iceberg! An emergency migration costs it £600 and two weeks of downtime.', 'text-red-300 font-semibold');
+                award('iceberg');
+            }
+            S.m++;
+            if (S.m >= MONTHS) finish();
+            render();
+        }
+
+        function smartMove() {
+            const y = S.you;
+            if (y.boats < 2) return 'switch';
+            if (y.pipelines < 2) return 'build';
+            if (y.clients < 2 && (S.m % 2 === 0)) return 'pitch';
+            if (y.gpus < 7 && (y.sale || S.m % 3 === 1)) return 'gpu';
+            if (!y.lease && y.clients >= 2 && y.gpus >= 3) return 'lease';
+            if (y.pipelines < 6) return 'build';
+            if (y.clients < 2) return 'pitch';
+            return 'switch';
+        }
+
+        function score() { return Math.max(0, Math.round((S.cl.total - S.you.total) / 10 + (100 - S.you.risk) * 3 + S.xp)); }
+
+        function finish() {
+            S.done = true; award('port');
+            if (S.you.total < S.cl.total) award('cheaper');
+            const sc = score();
+            if (!best || sc > best) { best = sc; try { localStorage.setItem('voyage-best', JSON.stringify(sc)); } catch (e) {} }
+            const diff = S.cl.total - S.you.total;
+            $('end-title').textContent = S.cl.sunk ? '⚓ You reached port. The Titanic did not.' : '⚓ Voyage complete';
+            $('end-body').innerHTML = `
+                <p>🏆 Score: <b class="text-amber-300">${sc}</b> · Rank ${rank().name} · ${S.badges.size}/${Object.keys(BADGES).length} badges</p>
+                <p>⛵ Your fleet spent <b>${gbp(S.you.total)}</b> with risk at <b>${Math.round(S.you.risk)}%</b>.</p>
+                <p>🛳️ Claude-only spent <b>${gbp(S.cl.total)}</b> with risk at <b>${Math.round(S.cl.risk)}%</b>${S.cl.sunk ? ' and <b class="text-red-300">sank</b>' : ''}.</p>
+                <p>${diff >= 0 ? `💷 You came out <b class="text-brand-success">${gbp(diff)}</b> ahead.` : `💷 You spent <b class="text-red-300">${gbp(-diff)}</b> more, mostly GPUs and rent. You still own the hardware and carry far less risk.`}</p>
+                <p class="text-slate-400">Real life: use the 🧮 calculator each month and the 📅 calendar gates before you sign the £450/mo lease.</p>`;
+            $('end').classList.remove('hidden');
+            stopAuto();
+        }
+
+        function rank() {
+            let r = RANKS[0], next = null;
+            for (let i = 0; i < RANKS.length; i++) { if (S.xp >= RANKS[i][0]) { r = RANKS[i]; next = RANKS[i + 1] || null; } }
+            return { name: r[1], from: r[0], to: next ? next[0] : r[0] };
+        }
+
+        function riskColor(r) { return r < 35 ? '#34d399' : r < 65 ? '#fbbf24' : '#f87171'; }
+        function riskWord(r) { return r < 15 ? 'Calm seas' : r < 35 ? 'Choppy' : r < 65 ? 'Storm warning' : r < 100 ? 'Taking on water' : 'Sunk'; }
+
+        function render() {
+            $('hud-month').textContent = S.m >= MONTHS ? 'Arrived ⚓' : `${S.m + 1}/${MONTHS} · ${monthName(S.m)}`;
+            $('hud-xp').textContent = S.xp;
+            const r = rank(); $('hud-rank').textContent = r.name;
+            $('hud-xpbar').style.width = (r.to > r.from ? Math.min(100, (S.xp - r.from) / (r.to - r.from) * 100) : 100) + '%';
+            $('hud-best').textContent = best ?? '–';
+
+            $('you-cost').textContent = gbp(S.you.last) + '/mo';
+            $('you-total').textContent = gbp(S.you.total);
+            $('you-boats').textContent = ['', '⛵', '⛵🚤', '⛵🚤🛥️', '⛵🚤🛥️🚢'][S.you.boats];
+            $('you-assets').textContent = `${S.you.clients} · ${vram()}GB`;
+            $('cl-cost').textContent = gbp(S.cl.last) + '/mo';
+            $('cl-total').textContent = gbp(S.cl.total);
+            $('cl-plan').textContent = S.cl.sunk ? '🧊 Sunk' : clPlan();
+            [['you', S.you.risk], ['cl', S.cl.risk]].forEach(([k, v]) => {
+                $(k + '-risk').style.width = v + '%'; $(k + '-risk').style.background = riskColor(v);
+                $(k + '-risk-txt').textContent = `${Math.round(v)}%: ${riskWord(v)}`;
+            });
+
+            // Ocean
+            ['subs', 'deepinfra', 'local', 'unit'].forEach((b, i) => $('boat-' + b).setAttribute('opacity', S.you.boats > i ? 1 : .15));
+            const cr = S.cl.risk;
+            const tilt = S.cl.sunk ? 28 : cr * 0.14, sink = S.cl.sunk ? 70 : Math.max(0, cr - 40) * 0.45;
+            $('titanic').style.transform = `translate(0px, ${sink}px) rotate(${tilt}deg)`;
+            $('titanic').style.transformOrigin = '575px 185px';
+            $('iceberg').style.transform = `translateX(${-Math.min(150, cr * 1.5)}px)`;
+            $('sos').textContent = S.cl.sunk ? '🆘 SOS: emergency migration' : cr >= 65 ? '⚠️ ICEBERG AHEAD' : '';
+            $('you-flag').textContent = S.you.risk < 25 ? '🏳️ smooth sailing' : '';
+
+            // Actions
+            $('actions').innerHTML = ACTIONS.map((a) => `
+                <button data-a="${a.id}" class="action text-left p-3 rounded-lg border border-slate-700 bg-slate-800/60 hover:border-brand-local hover:bg-slate-800" ${(!a.ok() || S.done) ? 'disabled' : ''}>
+                    <span class="block font-semibold text-white">${a.label}</span>
+                    <span class="block text-xs text-slate-400 mt-0.5">${typeof a.hint === 'function' ? a.hint() : a.hint}</span>
+                </button>`).join('');
+
+            $('log').innerHTML = S.log.slice(0, 60).map((l) => `<li class="flex gap-2"><span class="shrink-0 text-xs text-slate-500 w-16">${monthName(l.m)}</span><span class="${l.cls}">${l.e} ${l.t}</span></li>`).join('') || '<li class="text-slate-400">Pick your first move ⬆️</li>';
+            $('badges').innerHTML = Object.entries(BADGES).map(([k, [e, n, d]]) => `
+                <div title="${d}" class="p-2 rounded-lg border ${S.badges.has(k) ? 'border-amber-400/60 bg-amber-400/10 pop' : 'border-slate-700 opacity-40 grayscale'}">
+                    <div class="text-2xl">${e}</div><div class="text-[11px] leading-tight mt-1 text-slate-300">${n}</div></div>`).join('');
+        }
+
+        function stopAuto() { clearInterval(auto); auto = null; $('autoplay').textContent = '⏩ Auto-captain'; }
+        $('actions').addEventListener('click', (e) => { const b = e.target.closest('button[data-a]'); if (b) turn(b.dataset.a); });
+        $('autoplay').onclick = () => {
+            if (auto) return stopAuto();
+            if (S.done) start();
+            $('autoplay').textContent = '⏸ Pause';
+            auto = setInterval(() => turn(smartMove()), 900);
+        };
+        function start() { stopAuto(); S = fresh(); $('end').classList.add('hidden'); $('event-banner').textContent = '🌅 Dec 2026: both captains set sail'; render(); }
+        $('restart').onclick = start;
+        $('end-again').onclick = start;
+        start();
+    })();
+    </script>
+</body>
+</html>

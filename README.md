@@ -12,8 +12,10 @@ A decision dashboard for one question: should AI workloads move from cloud subsc
 | Repository | https://github.com/rifaterdemsahin/local-ai-setup-plan |
 | Deploy runs (GitHub Actions) | https://github.com/rifaterdemsahin/local-ai-setup-plan/actions |
 | Pages settings | https://github.com/rifaterdemsahin/local-ai-setup-plan/settings/pages |
-| Infographic: Cloud spend vs local break-even | [Gemini_Generated_Image_g08i9pg08i9pg08i.png](Gemini_Generated_Image_g08i9pg08i9pg08i.png) |
-| Infographic: 7-GPU rig vs DeepInfra DeepSeek | [Gemini_Generated_Image_5onljx5onljx5onl.png](Gemini_Generated_Image_5onljx5onljx5onl.png) |
+| Infographic: Cloud spend vs local break-even | [images/cloud-vs-local-break-even.png](images/cloud-vs-local-break-even.png) |
+| Infographic: 7-GPU rig vs DeepInfra DeepSeek | [images/7-gpu-rig-vs-deepinfra-deepseek.png](images/7-gpu-rig-vs-deepinfra-deepseek.png) |
+| Photo: open-air GPU rig frame | [images/open-air-gpu-rig-frame.webp](images/open-air-gpu-rig-frame.webp) |
+| 🚢 Two Boats game (you vs Claude-only) | https://rifaterdemsahin.github.io/local-ai-setup-plan/voyage.html |
 | DeepInfra pricing (to update the £/M rate) | https://deepinfra.com/pricing |
 | DeepInfra usage dashboard (to read your monthly token volume) | https://deepinfra.com/dash/usage |
 | AMD ROCm docs (RX 6800/6900 support) | https://rocm.docs.amd.com/ |
@@ -45,7 +47,10 @@ Use the calculator each month with your real token volume:
 
 - `index.html`: dashboard, OKRs, calculator, UML state and deployment diagrams, break-even chart
 - `calendar.html`: month grid, milestones, Gantt roadmap, monthly-review activity diagram, client sequence diagram
-- `nav.js`: shared menu injected on every page
+- `voyage.html`: 🚢 Two Boats game. A diversified fleet (you) vs a single-vendor Titanic (Claude-only)
+- `nav.js`: shared menu + site-wide search (press `/`) injected on every page
+- `images/`: infographics (full PNG + light WebP previews), rig frame photo, icons
+- `robots.txt`, `sitemap.xml`, `favicon.svg`, `favicon.ico`
 
 ## 🚀 Deploy
 

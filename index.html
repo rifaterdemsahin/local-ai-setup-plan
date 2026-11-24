@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Infrastructure Scaling: Local vs Cloud</title>
     <!-- Tailwind CSS -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -236,15 +239,24 @@ flowchart TB
         </div>
     </section>
 
-    <!-- ============ SOURCE INFOGRAPHICS ============ -->
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <a href="Gemini_Generated_Image_g08i9pg08i9pg08i.png" target="_blank" class="glass-card p-3 block hover:border-brand-cloud transition-colors">
-            <img src="Gemini_Generated_Image_g08i9pg08i9pg08i.png" loading="lazy" alt="Cloud AI subscriptions + DeepInfra vs local 7-GPU rig break-even and migration roadmap" class="w-full rounded-lg">
-            <p class="text-sm text-slate-300 mt-3 px-1"><span class="text-brand-cloud font-semibold">Where you are now:</span> ~£73/mo of cloud spend, the break-even trajectory, and the migration roadmap.</p>
+    <!-- ============ SOURCE INFOGRAPHICS + HARDWARE ============ -->
+    <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+        <a href="images/cloud-vs-local-break-even.png" target="_blank" class="glass-card p-3 block hover:border-brand-cloud transition-colors">
+            <img src="images/cloud-vs-local-break-even.webp" loading="lazy" alt="Cloud AI subscriptions + DeepInfra vs local 7-GPU rig break-even and migration roadmap" class="w-full rounded-lg">
+            <p class="text-sm text-slate-300 mt-3 px-1"><span class="text-brand-cloud font-semibold">☁️ Where you are now:</span> ~£73/mo of cloud spend, the break-even trajectory, and the migration roadmap. Click for full size.</p>
         </a>
-        <a href="Gemini_Generated_Image_5onljx5onljx5onl.png" target="_blank" class="glass-card p-3 block hover:border-brand-local transition-colors">
-            <img src="Gemini_Generated_Image_5onljx5onljx5onl.png" loading="lazy" alt="7-GPU rig vs DeepInfra DeepSeek monthly token break-even targets" class="w-full rounded-lg">
-            <p class="text-sm text-slate-300 mt-3 px-1"><span class="text-brand-local font-semibold">The target:</span> 620M–1.95B tokens/mo depending on model and year, plus the 3 key takeaways.</p>
+        <a href="images/7-gpu-rig-vs-deepinfra-deepseek.png" target="_blank" class="glass-card p-3 block hover:border-brand-local transition-colors">
+            <img src="images/7-gpu-rig-vs-deepinfra-deepseek.webp" loading="lazy" alt="7-GPU rig vs DeepInfra DeepSeek monthly token break-even targets" class="w-full rounded-lg">
+            <p class="text-sm text-slate-300 mt-3 px-1"><span class="text-brand-local font-semibold">🎯 The target:</span> 620M–1.95B tokens/mo depending on model and year, plus the 3 key takeaways. Click for full size.</p>
+        </a>
+        <a href="images/open-air-gpu-rig-frame.webp" target="_blank" class="glass-card p-3 block hover:border-brand-success transition-colors md:col-span-2 xl:col-span-1">
+            <div class="bg-white rounded-lg p-4"><img src="images/open-air-gpu-rig-frame.webp" loading="lazy" alt="Open-air steel GPU mining-style rig frame" class="w-full rounded"></div>
+            <p class="text-sm text-slate-300 mt-3 px-1"><span class="text-brand-success font-semibold">🔩 The rig frame:</span> an open-air steel chassis. The WRX80 board sits on the lower tray with the PSU(s) next to it, and up to 7 GPUs on risers line the top rail, so there's airflow for 24/7 load in the storage unit.</p>
+            <ul class="text-xs text-slate-400 mt-2 px-1 space-y-1">
+                <li>🖥️ Lower tray: WRX80 motherboard, RAM, drives</li>
+                <li>🔌 Side cut-out: 1600W PSU (a 2nd PSU from Q2 2027)</li>
+                <li>🎮 Top rail: 1 → 3 → 5 → 7 GPUs on PCIe risers</li>
+            </ul>
         </a>
     </section>
 

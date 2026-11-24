@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rifaterdemsahin.github.io/local-ai-setup-plan/sitemap.xml
