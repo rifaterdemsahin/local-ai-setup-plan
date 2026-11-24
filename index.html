@@ -7,7 +7,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
@@ -68,6 +68,141 @@
             Executive Summary: 7-GPU WRX80 Local Rig vs. DeepInfra / Cloud Subs (Q4 2026 - Q3 2027)
         </p>
     </header>
+
+    <!-- ============ OBJECTIVE & KEY RESULTS ============ -->
+    <section class="glass-card p-6 mb-8 border-l-4 border-l-brand-success">
+        <p class="text-xs uppercase tracking-wider text-brand-success font-semibold mb-1">Objective</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">Move AI workloads from cloud to a self-hosted 7-GPU rig, but only when the numbers pay for it.</h2>
+        <p class="text-slate-400 text-sm mb-6">The big decision is renting the <span class="text-white">£450/mo storage unit</span> (free electricity). Until that pays off, stay on cloud (~£73/mo) and build at home on the 1x RX 6900 XT for free.</p>
+
+        <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-3">Key Results</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700">
+                <p class="text-brand-local font-bold text-sm mb-1">KR1 · Volume</p>
+                <p class="text-sm text-slate-300">Reach <span class="text-white font-semibold">≥1.3B tokens/mo</span> on DeepSeek V3 or <span class="text-white font-semibold">≥620M</span> on R1, and hold it for <span class="text-white">3 months in a row</span> (Year-2+ targets; Year 1 needs 1.95B / 930M).</p>
+            </div>
+            <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700">
+                <p class="text-brand-success font-bold text-sm mb-1">KR2 · Revenue</p>
+                <p class="text-sm text-slate-300">Sign <span class="text-white font-semibold">2 local businesses at £225/mo</span> for private email bots. That's £450/mo, which pays the full rent (the "zero-token shortcut").</p>
+            </div>
+            <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700">
+                <p class="text-brand-cloud font-bold text-sm mb-1">KR3 · Cost discipline</p>
+                <p class="text-sm text-slate-300">Keep cloud spend <span class="text-white font-semibold">≤ £73/mo</span> and rent nothing until KR1 or KR2 is met. Track usage every month in the calculator below.</p>
+            </div>
+            <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700">
+                <p class="text-amber-400 font-bold text-sm mb-1">KR4 · Capacity</p>
+                <p class="text-sm text-slate-300">Get local bot pipelines (email, research, CRM) running on 1 GPU by <span class="text-white">Q1 2027</span>, then scale to <span class="text-white font-semibold">112GB VRAM</span> within the <span class="text-white">£2,720</span> Year-1 hardware budget.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CALCULATOR ============ -->
+    <section class="glass-card p-6 mb-8 border-t-4 border-t-brand-local" id="calculator">
+        <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+            <h2 class="text-xl md:text-2xl font-bold text-white">Should I act yet? Break-even calculator</h2>
+            <span class="text-xs text-slate-500">Each month, enter your real numbers</span>
+        </div>
+        <p class="text-sm text-slate-400 mb-6">This compares what your token volume <em>would</em> cost on the cloud API with what the local rig costs each month, after subtracting client income and any subscriptions you would cancel.</p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Inputs -->
+            <div class="space-y-4 text-sm">
+                <label class="block">
+                    <span class="text-slate-300">Monthly token volume (millions)</span>
+                    <input id="c-tokens" type="number" min="0" step="10" value="20" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:border-brand-local outline-none">
+                    <span class="text-xs text-slate-500">Today: ~15–20M. Measure it from your DeepInfra dashboard and local logs.</span>
+                </label>
+                <label class="block">
+                    <span class="text-slate-300">Cloud price you'd otherwise pay (£ per 1M tokens)</span>
+                    <select id="c-rate-preset" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white outline-none">
+                        <option value="0.35" selected>DeepSeek V3 blended: £0.35/M</option>
+                        <option value="0.73">DeepSeek R1 (reasoning): £0.73/M</option>
+                        <option value="0.008">Flash-class (your current DeepInfra mix): ~£0.008/M</option>
+                        <option value="custom">Custom…</option>
+                    </select>
+                    <input id="c-rate" type="number" min="0" step="0.01" value="0.35" class="mt-2 w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white outline-none hidden">
+                </label>
+                <div class="grid grid-cols-2 gap-4">
+                    <label class="block">
+                        <span class="text-slate-300">Storage rent (£/mo)</span>
+                        <input id="c-rent" type="number" min="0" step="10" value="450" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white outline-none">
+                    </label>
+                    <label class="block">
+                        <span class="text-slate-300">Electricity (£/mo)</span>
+                        <input id="c-power" type="number" min="0" step="10" value="0" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white outline-none">
+                    </label>
+                    <label class="block">
+                        <span class="text-slate-300">Paying clients</span>
+                        <input id="c-clients" type="number" min="0" step="1" value="0" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white outline-none">
+                    </label>
+                    <label class="block">
+                        <span class="text-slate-300">Fee per client (£/mo)</span>
+                        <input id="c-fee" type="number" min="0" step="5" value="225" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white outline-none">
+                    </label>
+                    <label class="block col-span-2">
+                        <span class="text-slate-300">Subscriptions you'd cancel once local (£/mo)</span>
+                        <input id="c-subs" type="number" min="0" step="1" value="0" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white outline-none">
+                        <span class="text-xs text-slate-500">e.g. Claude/Grok/Gemini Pro ≈ £46/mo. Leave at 0 if you'd keep them.</span>
+                    </label>
+                </div>
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input id="c-year1" type="checkbox" class="accent-sky-400 w-4 h-4">
+                    <span class="text-slate-300">Year 1: add hardware cost spread over 12 months (£2,720 ÷ 12 = £227/mo)</span>
+                </label>
+            </div>
+
+            <!-- Outputs -->
+            <div class="flex flex-col gap-4">
+                <div id="c-verdict" class="rounded-xl p-5 border-2">
+                    <p id="c-verdict-title" class="text-2xl font-bold"></p>
+                    <p id="c-verdict-text" class="text-sm mt-1 text-slate-300"></p>
+                </div>
+                <div class="grid grid-cols-2 gap-3 text-sm">
+                    <div class="bg-slate-800/60 rounded-lg p-3"><p class="text-slate-400 text-xs">Cloud-equivalent cost</p><p id="o-cloud" class="text-white text-xl font-bold"></p></div>
+                    <div class="bg-slate-800/60 rounded-lg p-3"><p class="text-slate-400 text-xs">Local rig cost</p><p id="o-local" class="text-white text-xl font-bold"></p></div>
+                    <div class="bg-slate-800/60 rounded-lg p-3"><p class="text-slate-400 text-xs">Offsets (clients + subs)</p><p id="o-offset" class="text-white text-xl font-bold"></p></div>
+                    <div class="bg-slate-800/60 rounded-lg p-3"><p class="text-slate-400 text-xs">Net monthly gain from going local</p><p id="o-net" class="text-xl font-bold"></p></div>
+                </div>
+                <div class="bg-slate-800/60 rounded-lg p-4 text-sm">
+                    <div class="flex justify-between mb-2"><span class="text-slate-400">Progress to break-even</span><span id="o-pct" class="text-white font-semibold"></span></div>
+                    <div class="w-full h-3 bg-slate-900 rounded-full overflow-hidden"><div id="o-bar" class="h-full rounded-full transition-all"></div></div>
+                    <p class="text-slate-400 text-xs mt-3">Break-even volume at this price: <span id="o-be" class="text-white font-semibold"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- When to act -->
+        <div class="mt-8 pt-6 border-t border-slate-700">
+            <h3 class="text-lg font-semibold text-white mb-4">When should I act?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div class="p-4 rounded-xl border border-slate-600 bg-slate-800/40">
+                    <p class="font-bold text-slate-200 mb-1">⏸ WAIT (below 50%)</p>
+                    <p class="text-slate-400">Stay on cloud subs + API. Build and test bots at home on the 6900 XT. Don't rent storage. <span class="text-white">This is where you are today.</span></p>
+                </div>
+                <div class="p-4 rounded-xl border border-amber-500/50 bg-amber-500/5">
+                    <p class="font-bold text-amber-400 mb-1">🛠 PREPARE (50–99%)</p>
+                    <p class="text-slate-400">Buy the next pair of used RX 6800/XT, line up client conversations, and get quotes for the storage unit. Don't sign the lease yet.</p>
+                </div>
+                <div class="p-4 rounded-xl border border-brand-success/60 bg-brand-success/5">
+                    <p class="font-bold text-brand-success mb-1">🚀 ACT (100%+ for 3 months, or 2 clients signed)</p>
+                    <p class="text-slate-400">Rent the unit, move the rig, and follow the roadmap below. A signed client contract counts on day one. Token volume needs <span class="text-white">3 months in a row</span> above break-even, so a single spike doesn't fool you.</p>
+                </div>
+            </div>
+            <p class="text-xs text-slate-500 mt-4">⚠ Check your model mix. Your DeepInfra bill ($34.79 for 3.34B tokens) is mostly cheap Flash-class models at about £0.008/M. At that price the rig only breaks even at about 56B tokens/mo, so it won't win on cost alone. The local case depends on replacing <em>DeepSeek-class</em> usage, on client income, or on privacy and sovereignty.</p>
+        </div>
+    </section>
+
+    <!-- ============ SOURCE INFOGRAPHICS ============ -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <a href="Gemini_Generated_Image_g08i9pg08i9pg08i.png" target="_blank" class="glass-card p-3 block hover:border-brand-cloud transition-colors">
+            <img src="Gemini_Generated_Image_g08i9pg08i9pg08i.png" loading="lazy" alt="Cloud AI subscriptions + DeepInfra vs local 7-GPU rig break-even and migration roadmap" class="w-full rounded-lg">
+            <p class="text-sm text-slate-300 mt-3 px-1"><span class="text-brand-cloud font-semibold">Where you are now:</span> ~£73/mo of cloud spend, the break-even trajectory, and the migration roadmap.</p>
+        </a>
+        <a href="Gemini_Generated_Image_5onljx5onljx5onl.png" target="_blank" class="glass-card p-3 block hover:border-brand-local transition-colors">
+            <img src="Gemini_Generated_Image_5onljx5onljx5onl.png" loading="lazy" alt="7-GPU rig vs DeepInfra DeepSeek monthly token break-even targets" class="w-full rounded-lg">
+            <p class="text-sm text-slate-300 mt-3 px-1"><span class="text-brand-local font-semibold">The target:</span> 620M–1.95B tokens/mo depending on model and year, plus the 3 key takeaways.</p>
+        </a>
+    </section>
 
     <!-- Top KPIs -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -226,6 +361,72 @@
     </div>
 
     <script>
+        // ===== Break-even calculator =====
+        (function () {
+            const $ = (id) => document.getElementById(id);
+            const gbp = (v) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }).format(v);
+            const tok = (m) => m >= 1000 ? (m / 1000).toFixed(2) + 'B tokens/mo' : Math.round(m) + 'M tokens/mo';
+            const num = (id) => Math.max(0, parseFloat($(id).value) || 0);
+
+            function rate() {
+                const p = $('c-rate-preset').value;
+                return p === 'custom' ? num('c-rate') : parseFloat(p);
+            }
+
+            function calc() {
+                const tokens = num('c-tokens');
+                const r = rate();
+                const hw = $('c-year1').checked ? 2720 / 12 : 0;
+                const local = num('c-rent') + num('c-power') + hw;
+                const offset = num('c-clients') * num('c-fee') + num('c-subs');
+                const cloud = tokens * r;
+                const net = cloud + offset - local;
+                const need = Math.max(0, local - offset);           // £ the tokens must cover
+                const be = r > 0 ? need / r : Infinity;             // break-even in M tokens
+                const pct = local > 0 ? Math.min(999, ((cloud + offset) / local) * 100) : 100;
+
+                $('o-cloud').textContent = gbp(cloud);
+                $('o-local').textContent = gbp(local);
+                $('o-offset').textContent = gbp(offset);
+                $('o-net').textContent = (net >= 0 ? '+' : '') + gbp(net);
+                $('o-net').className = 'text-xl font-bold ' + (net >= 0 ? 'text-brand-success' : 'text-red-400');
+                $('o-pct').textContent = pct.toFixed(0) + '%';
+                $('o-be').textContent = need === 0 ? 'already covered by clients/subs' : (isFinite(be) ? tok(be) : 'n/a');
+
+                const bar = $('o-bar');
+                bar.style.width = Math.min(100, pct) + '%';
+
+                const v = $('c-verdict');
+                let title, text, cls, barCls;
+                if (pct >= 100) {
+                    title = '🚀 ACT';
+                    text = offset >= local
+                        ? 'Client income and cancelled subs cover the rig on their own, so going local is cheaper from day one.'
+                        : 'Your volume beats break-even. If it has stayed here for 3 months in a row, rent the unit and migrate.';
+                    cls = 'border-brand-success bg-brand-success/10'; title = '<span class="text-brand-success">' + title + '</span>'; barCls = 'bg-brand-success';
+                } else if (pct >= 50) {
+                    title = '<span class="text-amber-400">🛠 PREPARE</span>';
+                    text = 'You are over halfway. Buy the next GPUs, talk to prospective clients, and get storage quotes. Don\'t sign the lease yet.';
+                    cls = 'border-amber-500 bg-amber-500/10'; barCls = 'bg-amber-400';
+                } else {
+                    title = '<span class="text-slate-200">⏸ WAIT</span>';
+                    text = 'Cloud is still cheaper. Stay on subs + API, keep building at home on the 6900 XT, and come back next month. You need ' + (isFinite(be) ? tok(be) : 'more volume') + ' or ' + Math.ceil(need / Math.max(1, num('c-fee'))) + ' paying client(s).';
+                    cls = 'border-slate-600 bg-slate-800/40'; barCls = 'bg-slate-400';
+                }
+                v.className = 'rounded-xl p-5 border-2 ' + cls;
+                $('c-verdict-title').innerHTML = title;
+                $('c-verdict-text').textContent = text;
+                bar.className = 'h-full rounded-full transition-all ' + barCls;
+            }
+
+            $('c-rate-preset').addEventListener('change', () => {
+                $('c-rate').classList.toggle('hidden', $('c-rate-preset').value !== 'custom');
+                calc();
+            });
+            document.querySelectorAll('#calculator input').forEach((el) => el.addEventListener('input', calc));
+            calc();
+        })();
+
         // Chart.js Setup
         document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('breakEvenChart').getContext('2d');
